@@ -192,6 +192,14 @@
         // ------------------------------------------------
 
         document.addEventListener('DOMContentLoaded', () => {
+            
+            // FIX: Inject the domain name into the H1 element
+            const domainDisplayElement = document.getElementById('domainDisplay3');
+            if (domainDisplayElement) {
+                domainDisplayElement.textContent = capitalizedDomain; 
+            }
+            // END FIX
+            
             // Update the pitch text element
             const pitchElement = document.getElementById('mainPitch'); 
             if (pitchElement) {
@@ -218,162 +226,8 @@
                 });
             });
         });
-         // 1. Define the redirect function globally
-        function redirectToSpaceship(event) {
-            const domainName = event.currentTarget.getAttribute("data-domain");
-            if (domainName) {
-                const redirectUrl = `https://www.spaceship.com/domain-search/?query=${domainName.toLowerCase()}&beast=false&tab=domains`;
-                window.open(redirectUrl, "_blank");
-                // Assuming closeModal is defined in script.js or elsewhere
-                if (typeof closeModal === 'function') {
-                    closeModal("domainModal"); 
-                }
-            }
-        }
-
-        // 2. Handle Web3Forms submission via AJAX to prevent redirect
-        function submitWeb3Form(event) {
-            event.preventDefault(); // Stop the default form submission (this prevents the redirect)
-
-            const form = event.target;
-            const formData = new FormData(form);
-            const formAction = form.getAttribute('action');
-            
-            // Note: A real implementation would show a loading state here
-
-            fetch(formAction, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'Accept': 'application/json' // Essential for Formspree/Web3Forms AJAX
-                }
-            })
-            .then(response => {
-                if (response.ok) {
-                    // Close the contact form and open the success modal
-                    if (typeof closeModal === 'function') {
-                        closeModal('contactFormModal');
-                    }
-                    if (typeof openModal === 'function') {
-                        openModal('successModal');
-                    }
-                    // Reset the form fields
-                    form.reset();
-                } else {
-                    // Handle server-side errors (e.g., spam protection failure)
-                    console.error('Submission error:', response.status);
-                    // Use a message box instead of alert()
-                    document.getElementById('submissionErrorText').textContent = 'An error occurred during submission. Please check your network and try again.';
-                    openModal('errorModal');
-                }
-            })
-            .catch(error => {
-                // Handle network errors
-                console.error('Network error:', error);
-                document.getElementById('submissionErrorText').textContent = 'A network error occurred. Please check your connection.';
-                openModal('errorModal');
-            });
-        }
-
-        // Get the full hostname (e.g., www.example.com or example.com)
-        const rawHostname = window.location.hostname;
-        
-        // Remove 'www.' if it exists to get the clean domain name
-        const currentDomain = rawHostname.replace(/^www\./, '');
-        
-        // Capitalize the first letter
-        let capitalizedDomain = currentDomain;
-        if (currentDomain.length > 0) {
-            capitalizedDomain = currentDomain.charAt(0).toUpperCase() + currentDomain.slice(1);
-        }
-        
-        // --- NEW FUNCTION: Add Backdrop Close Listener ---
-        function addBackdropCloseListener(modalId) {
-            const modal = document.getElementById(modalId);
-            if (!modal) return;
-            
-            // Use onclick to ensure only one listener is active and close on backdrop click
-            modal.onclick = (event) => {
-                // If the click target is the dialog element itself (the backdrop), close it.
-                if (event.target === modal) {
-                    closeModal(modalId);
-                }
-            };
-        }
-        
-        // Modal logic (kept here for completeness, usually in script.js)
-        function openModal(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.showModal();
-                // Call the new function to enable closing on backdrop click
-                addBackdropCloseListener(modalId);
-            }
-        }
-
-        function closeModal(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.close();
-                // Optionally reset the onclick handler to remove the listener 
-                // when the modal is closed to prevent unexpected behavior.
-                modal.onclick = null;
-            }
-        }
-        // ------------------------------------------------
-
-        // Wait for the DOM to be fully loaded to ensure all elements are available
-        document.addEventListener('DOMContentLoaded', () => {
-            const domainElement = document.getElementById('domainDisplay3'); 
-            const buttonElement = document.getElementById('spaceshipButton'); 
-            
-            // 1. Update the H1 element (Uses capitalized domain)
-            if (domainElement) {
-                domainElement.textContent = capitalizedDomain;
-            }
-            
-            // 2. Set the data-domain attribute on the new button for the redirect function
-            if (buttonElement) {
-                buttonElement.setAttribute('data-domain', currentDomain);
-            }
-
-            // 3. Attach the AJAX submission handler to the form
-            const web3Form = document.getElementById('web3Form');
-            if (web3Form) {
-                web3Form.addEventListener('submit', submitWeb3Form);
-            }
-
-            // 4. Update Privacy Policy text with the dynamic domain (Uses non-capitalized domain for URL integrity)
-            const privacyText1 = document.getElementById('privacyDomainText1');
-            const privacyText2 = document.getElementById('privacyDomainText2');
-            
-            if (privacyText1) {
-                privacyText1.textContent = currentDomain;
-            }
-            if (privacyText2) {
-                privacyText2.textContent = currentDomain;
-            }
-        });
         
     </script>
-	 <style>
-        dialog {
-            border: none;
-            padding: 0;
-            border-radius: 0.75rem;
-            max-width: 90%;
-            margin: auto;
-            z-index: 50;
-        }
-        dialog::backdrop {
-            background-color: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(4px);
-        }
-        /* Ensure the body font is used */
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-    </style>
 </head>
 <body class="flex flex-col min-h-screen bg-gray-100" style="font-family: 'Inter', sans-serif;">
     <nav class="hidden"></nav>
@@ -401,8 +255,9 @@
         </div>
 
         <div class="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 class="text-3xl font-extrabold text-gray-900 mb-2">Project Concept</h2>
+            <h2 class="text-3xl font-extrabold text-gray-900 mb-2">Concept Applications</h2>
             <p class="text-lg font-medium text-indigo-600 mb-1">The Future of Beauty Tech. This Premium Concept & Domain is for Sale.</p>
+            <p class="text-base text-gray-700 max-w-3xl mx-auto">This exclusive brand, concept, and premium domain is available for acquisition.</p>
         </div>
 
         <div class="split-container w-full max-w-6xl mx-auto mb-12">
