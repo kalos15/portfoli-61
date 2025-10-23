@@ -34,20 +34,22 @@
         
         /* 3-Column Visual Container */
         .split-container {
-            /* Increased size to better show video backgrounds */
-            height: 90vh; 
-            min-height: 700px;
+            /* INCREASED from 90vh to 99vh (approx 10% more vertical height on mobile) */
+            height: 99vh; 
+            min-height: 770px; /* Increased from 700px */
             display: grid;
             gap: 1rem;
             padding: 1rem;
-            /* Default to 1 column on mobile */
+            /* Default to 1 column on mobile (vertical stack) */
             grid-template-columns: 1fr; 
         }
 
-        /* Desktop: 3 equal columns */
+        /* Desktop: 3 equal columns (no change) */
         @media (min-width: 1024px) { 
             .split-container {
                 grid-template-columns: repeat(3, 1fr);
+                height: 90vh; /* Keep desktop height consistent or you can change this too if you want */
+                min-height: 700px;
             }
         }
         
@@ -190,13 +192,12 @@
             }
         }
 
-		// 1. Define the redirect function globally
+		// 1. Define the redirect function globally (it relies on the data-domain attribute)
         function redirectToSpaceship(event) {
             const domainName = event.currentTarget.getAttribute("data-domain");
             if (domainName) {
                 const redirectUrl = `https://www.spaceship.com/domain-search/?query=${domainName.toLowerCase()}&beast=false&tab=domains`;
                 window.open(redirectUrl, "_blank");
-                // Assuming closeModal is defined in script.js or elsewhere
                 if (typeof closeModal === 'function') {
                     closeModal("domainModal"); 
                 }
@@ -213,6 +214,13 @@
             }
             // END FIX
             
+            // NEW FIX: Set the data-domain attribute on the button so the function works
+            const spaceshipButton = document.getElementById('spaceshipButton');
+            if (spaceshipButton) {
+                // currentDomain holds the non-www, lowercase version of the URL, perfect for a search query
+                spaceshipButton.setAttribute('data-domain', currentDomain); 
+            }
+
             // Update the pitch text element
             const pitchElement = document.getElementById('mainPitch'); 
             if (pitchElement) {
@@ -255,7 +263,7 @@
                 
                 <button 
                     id="spaceshipButton"
-                    onclick="redirectToSpaceship(event)" 
+                    data-domain="" onclick="redirectToSpaceship(event)" 
                     class="inline-flex items-center justify-center p-1 rounded-lg bg-white bg-opacity-10 hover:bg-opacity-20 transition"
                     title="Check domain availability on Spaceship"
                 >
