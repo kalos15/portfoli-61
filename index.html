@@ -5,150 +5,106 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Domain for sale!</title>
 	<link rel="icon" type="image/svg+xml" href="https://spaceship-cdn.com/static/spaceship/favicon/spaceship-icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     
-      <link rel="stylesheet" href="styles.css">  
+    <link rel="stylesheet" href="styles.css"> 
     
-    <script>
-        // 1. Define the redirect function globally
-        function redirectToSpaceship(event) {
-            const domainName = event.currentTarget.getAttribute("data-domain");
-            if (domainName) {
-                const redirectUrl = `https://www.spaceship.com/domain-search/?query=${domainName.toLowerCase()}&beast=false&tab=domains`;
-                window.open(redirectUrl, "_blank");
-                // Assuming closeModal is defined in script.js or elsewhere
-                if (typeof closeModal === 'function') {
-                    closeModal("domainModal"); 
-                }
-            }
-        }
-
-        // 2. Handle Web3Forms submission via AJAX to prevent redirect
-        function submitWeb3Form(event) {
-            event.preventDefault(); // Stop the default form submission (this prevents the redirect)
-
-            const form = event.target;
-            const formData = new FormData(form);
-            const formAction = form.getAttribute('action');
-            
-            // Note: A real implementation would show a loading state here
-
-            fetch(formAction, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'Accept': 'application/json' // Essential for Formspree/Web3Forms AJAX
-                }
-            })
-            .then(response => {
-                if (response.ok) {
-                    // Close the contact form and open the success modal
-                    if (typeof closeModal === 'function') {
-                        closeModal('contactFormModal');
-                    }
-                    if (typeof openModal === 'function') {
-                        openModal('successModal');
-                    }
-                    // Reset the form fields
-                    form.reset();
-                } else {
-                    // Handle server-side errors (e.g., spam protection failure)
-                    console.error('Submission error:', response.status);
-                    // Use a message box instead of alert()
-                    document.getElementById('submissionErrorText').textContent = 'An error occurred during submission. Please check your network and try again.';
-                    openModal('errorModal');
-                }
-            })
-            .catch(error => {
-                // Handle network errors
-                console.error('Network error:', error);
-                document.getElementById('submissionErrorText').textContent = 'A network error occurred. Please check your connection.';
-                openModal('errorModal');
-            });
-        }
-
-        // Get the full hostname (e.g., www.example.com or example.com)
-        const rawHostname = window.location.hostname;
-        
-        // Remove 'www.' if it exists to get the clean domain name
-        const currentDomain = rawHostname.replace(/^www\./, '');
-        
-        // Capitalize the first letter
-        let capitalizedDomain = currentDomain;
-        if (currentDomain.length > 0) {
-            capitalizedDomain = currentDomain.charAt(0).toUpperCase() + currentDomain.slice(1);
-        }
-        
-        // --- NEW FUNCTION: Add Backdrop Close Listener ---
-        function addBackdropCloseListener(modalId) {
-            const modal = document.getElementById(modalId);
-            if (!modal) return;
-            
-            // Use onclick to ensure only one listener is active and close on backdrop click
-            modal.onclick = (event) => {
-                // If the click target is the dialog element itself (the backdrop), close it.
-                if (event.target === modal) {
-                    closeModal(modalId);
-                }
-            };
-        }
-        
-        // Modal logic (kept here for completeness, usually in script.js)
-        function openModal(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.showModal();
-                // Call the new function to enable closing on backdrop click
-                addBackdropCloseListener(modalId);
-            }
-        }
-
-        function closeModal(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.close();
-                // Optionally reset the onclick handler to remove the listener 
-                // when the modal is closed to prevent unexpected behavior.
-                modal.onclick = null;
-            }
-        }
-        // ------------------------------------------------
-
-        // Wait for the DOM to be fully loaded to ensure all elements are available
-        document.addEventListener('DOMContentLoaded', () => {
-            const domainElement = document.getElementById('domainDisplay3'); 
-            const buttonElement = document.getElementById('spaceshipButton'); 
-            
-            // 1. Update the H1 element (Uses capitalized domain)
-            if (domainElement) {
-                domainElement.textContent = capitalizedDomain;
-            }
-            
-            // 2. Set the data-domain attribute on the new button for the redirect function
-            if (buttonElement) {
-                buttonElement.setAttribute('data-domain', currentDomain);
-            }
-
-            // 3. Attach the AJAX submission handler to the form
-            const web3Form = document.getElementById('web3Form');
-            if (web3Form) {
-                web3Form.addEventListener('submit', submitWeb3Form);
-            }
-
-            // 4. Update Privacy Policy text with the dynamic domain (Uses non-capitalized domain for URL integrity)
-            const privacyText1 = document.getElementById('privacyDomainText1');
-            const privacyText2 = document.getElementById('privacyDomainText2');
-            
-            if (privacyText1) {
-                privacyText1.textContent = currentDomain;
-            }
-            if (privacyText2) {
-                privacyText2.textContent = currentDomain;
-            }
-        });
-        
-    </script>
     <style>
+        /* Reusing Inter from the imported CSS */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Custom styles to match the cool, clean aesthetic from styles.css */
+        .indigo-accent {
+            color: #4F46E5; /* Indigo-600 to match the gradient-blue-bg */
+        }
+        
+        /* Virtual Beauty Logo Styling */
+        .virtual-logo {
+            font-weight: 900;
+            font-size: 2.25rem; /* text-4xl on desktop */
+            letter-spacing: 0.25em;
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* 3-Column Visual Container */
+        .split-container {
+            /* INCREASED from 90vh to 99vh (approx 10% more vertical height on mobile) */
+            height: 99vh; 
+            min-height: 770px; /* Increased from 700px */
+            display: grid;
+            gap: 1rem;
+            padding: 1rem;
+            /* Default to 1 column on mobile (vertical stack) */
+            grid-template-columns: 1fr; 
+        }
+
+        /* Desktop: 3 equal columns (no change) */
+        @media (min-width: 1024px) { 
+            .split-container {
+                grid-template-columns: repeat(3, 1fr);
+                height: 90vh; /* Keep desktop height consistent or you can change this too if you want */
+                min-height: 700px;
+            }
+        }
+        
+        .split-item {
+            position: relative;
+            background-color: #374151; /* Dark fallback */
+            border-radius: 1.5rem; /* Rounded-3xl */
+            overflow: hidden;
+            transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.2); /* Soft blue shadow */
+        }
+        
+        .split-item:hover {
+            transform: translateY(-8px); /* Deeper hover lift */
+            box-shadow: 0 18px 35px rgba(79, 70, 229, 0.5); /* Stronger blue shadow */
+            z-index: 10;
+        }
+        
+        .media-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
+        
+        /* ADJUSTED OPACITY FOR BETTER VISUALS: 0.2 (20%) */
+        .split-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.2); /* Much lighter overlay */
+            /* backdrop-filter: blur(2px); Removed blur for clarity */
+            z-index: 5;
+            transition: background 0.3s ease;
+        }
+        
+        .split-item:hover .split-overlay {
+            background: rgba(0, 0, 0, 0.1); /* Even lighter on hover */
+        }
+        
+        .split-content {
+            position: relative;
+            z-index: 10;
+            padding: 2.5rem; /* Increased padding for better visual spacing */
+            color: white;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Modal styling */
         dialog {
             border: none;
             padding: 0;
@@ -161,11 +117,138 @@
             background-color: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(4px);
         }
-        /* Ensure the body font is used */
-        body {
-            font-family: 'Inter', sans-serif;
+        
+        .submit-button {
+            background-color: #4F46E5; /* Primary button color from styles.css */
         }
     </style>
+    
+    <script>
+        // Handle Web3Forms submission via AJAX
+        function submitWeb3Form(event) {
+            event.preventDefault();
+
+            const form = event.target;
+            const formData = new FormData(form);
+            const formAction = form.getAttribute('action');
+            
+            fetch(formAction, {
+                method: 'POST',
+                body: formData,
+                headers: { 'Accept': 'application/json' }
+            })
+            .then(response => {
+                if (response.ok) {
+                    if (typeof closeModal === 'function') {
+                        closeModal('contactFormModal');
+                    }
+                    if (typeof openModal === 'function') {
+                        openModal('successModal');
+                    }
+                    form.reset();
+                } else {
+                    console.error('Submission error:', response.status);
+                    document.getElementById('submissionErrorText').textContent = 'An error occurred during submission. Please check your details and network.';
+                    openModal('errorModal');
+                }
+            })
+            .catch(error => {
+                console.error('Network error:', error);
+                document.getElementById('submissionErrorText').textContent = 'A network error occurred. Please check your connection.';
+                openModal('errorModal');
+            });
+        }
+
+        const rawHostname = window.location.hostname;
+        const currentDomain = rawHostname.replace(/^www\./, '');
+        let capitalizedDomain = currentDomain.length > 0 ? currentDomain.charAt(0).toUpperCase() + currentDomain.slice(1) : 'Virtual Beauty';
+        
+        // --- Backdrop Close Listener ---
+        function addBackdropCloseListener(modalId) {
+            const modal = document.getElementById(modalId);
+            if (!modal) return;
+            
+            modal.onclick = (event) => {
+                if (event.target === modal) {
+                    closeModal(modalId);
+                }
+            };
+        }
+        
+        // Modal logic
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.showModal();
+                addBackdropCloseListener(modalId);
+            }
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.close();
+                modal.onclick = null;
+            }
+        }
+
+		// 1. Define the redirect function globally (it relies on the data-domain attribute)
+        function redirectToSpaceship(event) {
+            const domainName = event.currentTarget.getAttribute("data-domain");
+            if (domainName) {
+                const redirectUrl = `https://www.spaceship.com/domain-search/?query=${domainName.toLowerCase()}&beast=false&tab=domains`;
+                window.open(redirectUrl, "_blank");
+                if (typeof closeModal === 'function') {
+                    closeModal("domainModal"); 
+                }
+            }
+        }
+        // ------------------------------------------------
+     
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // FIX: Inject the domain name into the H1 element
+            const domainDisplayElement = document.getElementById('domainDisplay3');
+            if (domainDisplayElement) {
+                domainDisplayElement.textContent = capitalizedDomain; 
+            }
+            // END FIX
+            
+            // NEW FIX: Set the data-domain attribute on the button so the function works
+            const spaceshipButton = document.getElementById('spaceshipButton');
+            if (spaceshipButton) {
+                // currentDomain holds the non-www, lowercase version of the URL, perfect for a search query
+                spaceshipButton.setAttribute('data-domain', currentDomain); 
+            }
+
+            // Update the pitch text element
+            const pitchElement = document.getElementById('mainPitch'); 
+            if (pitchElement) {
+                pitchElement.textContent = `The Future of Beauty Tech. This Premium Concept & Domain is for Sale.`;
+            }
+            
+            // Attach the AJAX submission handler to the form
+            const web3Form = document.getElementById('web3Form');
+            if (web3Form) {
+                web3Form.addEventListener('submit', submitWeb3Form);
+            }
+
+            // Update Privacy Policy text with the dynamic domain
+            const privacyText1 = document.getElementById('privacyDomainText1');
+            const privacyText2 = document.getElementById('privacyDomainText2');
+            
+            if (privacyText1) { privacyText1.textContent = currentDomain; }
+            if (privacyText2) { privacyText2.textContent = currentDomain; }
+            
+            // Attach click listeners for the split sections to open the contact form
+            document.querySelectorAll('.split-item').forEach(item => {
+                 item.addEventListener('click', () => {
+                    openModal('contactFormModal');
+                });
+            });
+        });
+        
+    </script>
 </head>
 <body class="flex flex-col min-h-screen bg-gray-100" style="font-family: 'Inter', sans-serif;">
     <nav class="hidden"></nav>
@@ -175,11 +258,12 @@
             
             <div class="px-10 pt-10 pb-4 mb-6 text-center text-white rounded-lg shadow-xl bg-gradient-to-br from-blue-900 to-indigo-600">
                 <h1 id="domainDisplay3" class="text-4xl font-bold mb-2"></h1>
+				<p class="text-lg font-medium opacity-90">Virtual Beauty</p>
                 <p class="text-lg font-medium opacity-90">Available for sale!</p>
                 
                 <button 
                     id="spaceshipButton"
-                    onclick="redirectToSpaceship(event)" 
+                    data-domain="" onclick="redirectToSpaceship(event)" 
                     class="inline-flex items-center justify-center p-1 rounded-lg bg-white bg-opacity-10 hover:bg-opacity-20 transition"
                     title="Check domain availability on Spaceship"
                 >
@@ -189,9 +273,66 @@
                         class="h-6"
                     />
                 </button>
-                </div>
+            </div>
+        </div>
 
-            <div class="bg-white p-8 sm:p-10 text-left rounded-lg shadow-xl">
+        <div class="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-lg font-medium text-red-300 mb-1">Concept Project</h2>
+            <p class="text-lg font-medium text-indigo-600 mb-1">This exclusive brand, concept, and premium domain is available for acquisition.</p>
+        </div>
+
+       <div class="split-container w-full max-w-4xl mx-auto mb-12">
+            
+            <div id="ai-side" class="split-item flex items-end justify-start">
+                <img src="https://cdn.prod.website-files.com/6139ee313144e527fc2c2fdb/62b194fe34b6a18584c1a8fb_why_choose_deepAR%20(2).jpg" 
+                     onerror="this.onerror=null;this.src='https://placehold.co/1000x1500/374151/FFFFFF?text=AI+ASSISTANT';" 
+                     alt="AI Beauty Assistant Visual" 
+                     class="media-background">
+                <div class="split-overlay"></div>
+                
+                <div class="split-content w-full h-full flex flex-col items-start justify-end">
+                    <h3 class="text-3xl font-bold mb-2">AI Beauty Assistant</h3>
+                    <p class="text-base font-light mb-6 opacity-80">"Your personal AI-powered recommendation advisor."</p>
+                    <button class="px-6 py-2 bg-white text-gray-900 font-semibold rounded-full text-sm transition hover:bg-gray-200 shadow-lg" onclick="openModal('contactFormModal'); event.stopPropagation();">
+                        Explore Concept
+                    </button>
+                </div>
+            </div>
+
+            <div id="makeup-ar-side" class="split-item flex items-end justify-start">
+                 <video class="media-background" autoplay loop muted playsinline 
+                        src="https://cdn.prod.website-files.com/6139ee313144e527fc2c2fdb/614839cc6b5ac5323de25abe_virtual_tryon6_optimised-transcode.mp4"
+                        onerror="this.style.display='none'; this.closest('.split-item').style.backgroundImage='url(https://placehold.co/1000x1500/374151/FFFFFF?text=VIRTUAL+MAKEUP)';">
+                 </video>
+                 <div class="split-overlay"></div>
+
+                <div class="split-content w-full h-full flex flex-col items-start justify-end">
+                    <h3 class="text-3xl font-bold mb-2">Virtual Makeup Try-On</h3>
+                    <p class="text-base font-light mb-6 opacity-80">"Instant AR try-on for makeup, hair color, and lashes."</p>
+                    <button class="px-6 py-2 bg-white text-gray-900 font-semibold rounded-full text-sm transition hover:bg-gray-200 shadow-lg" onclick="openModal('contactFormModal'); event.stopPropagation();">
+                        View Details
+                    </button>
+                </div>
+            </div>
+
+            <div id="shoe-ar-side" class="split-item flex items-end justify-start">
+                 <video class="media-background" autoplay loop muted playsinline 
+                        src="https://cdn.prod.website-files.com/6139ee313144e527fc2c2fdb/6411a061ba85e59323a3bad1_shoe-try-on-transcode.mp4"
+                        onerror="this.style.display='none'; this.closest('.split-item').style.backgroundImage='url(https://placehold.co/1000x1500/374151/FFFFFF?text=VIRTUAL+SHOES)';">
+                 </video>
+                 <div class="split-overlay"></div>
+
+                <div class="split-content w-full h-full flex flex-col items-start justify-end">
+                    <h3 class="text-3xl font-bold mb-2">Shoe Try-On</h3>
+                    <p class="text-base font-light mb-6 opacity-80">"Augmented reality for footwear and accessory visualization."</p>
+                    <button class="px-6 py-2 bg-white text-gray-900 font-semibold rounded-full text-sm transition hover:bg-gray-200 shadow-lg" onclick="openModal('contactFormModal'); event.stopPropagation();">
+                        Explore Concept
+                    </button>
+                </div>
+            </div>
+        </div>
+
+            <div class="bg-white p-8 sm:p-10 text-left rounded-lg shadow-xl w-full max-w-md mx-auto">
     <h2 class="text-xl font-semibold text-blue-900 mb-8">Contact the seller</h2>
 
     <div class="space-y-4 text-left mb-4"> <div class="flex items-center justify-start text-sm text-gray-600 font-medium">
@@ -223,20 +364,14 @@
     <img src="https://img.icons8.com/color/40/000000/paypal.png" alt="Paypal" class="w-6 h-6 object-contain">
     <img src="https://img.icons8.com/color/40/000000/google-pay.png" alt="GooglePay" class="w-6 h-6 object-contain">
     <img src="https://img.icons8.com/color/40/000000/apple-pay.png" alt="ApplePay" class="w-6 h-6 object-contain">
-	<img src="https://img.icons8.com/color/40/000000/bitcoin.png" alt="Bitcoin" class="w-6 h-6 object-contain">
-</div>
+    <img src="https://img.icons8.com/color/40/000000/bitcoin.png" alt="Bitcoin" class="w-6 h-6 object-contain">
+    </div>
 
 </div>
-        </div>
     </main>
-    
-<footer class="mt-auto w-full text-center py-4 text-xs text-gray-500">
-    Powered by 
-    <a href="#" onclick="openModal('kalosContactModal'); return false;" class="text-gray-500 hover:text-gray-700 font-semibold">kalos_15</a> 
-    • Content by user •
-    <a href="#" onclick="openModal('privacyPolicyModal'); return false;" class="text-gray-500 hover:text-gray-700 font-semibold">Privacy Policy</a>
-</footer>
-
+    <footer class="mt-auto w-full text-center py-4 text-xs text-gray-500">
+        Powered by <a href="#" onclick="openModal('kalosContactModal'); return false;" class="text-gray-500 hover:text-gray-700 font-semibold">kalos_15</a> • Content by user • <a href="#" onclick="openModal('privacyPolicyModal'); return false;" class="text-gray-500 hover:text-gray-700 font-semibold">Privacy Policy</a>
+    </footer>
 
     <dialog id="contactFormModal" class="p-0 backdrop:bg-black/50">
         <div class="relative w-full h-full bg-white rounded-xl shadow-2xl max-w-sm mx-auto overflow-hidden">
@@ -245,7 +380,6 @@
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                     Back
                 </button>
-
                 <h2 class="text-20xl font-bold text-gray-900 mb-2">Let's get started!</h2>
                 <p class="text-gray-600 mb-6">Enter your contact information to begin.</p>
 
@@ -297,74 +431,45 @@
                         <textarea id="messageTextarea" name="message" placeholder="Message" rows="2" class="w-full py-1 px-4 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-sm"></textarea>
                         <svg class="absolute left-3 top-2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m-4 8h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                     </div>
-
-                    <p class="text-xs text-gray-500 text-center mt-6">
-                        By continuing, you agree to our 
-                        <a href="#" onclick="openModal('privacyPolicyModal'); return false;" class="text-blue-600 hover:text-blue-800 font-semibold">Privacy Policy</a>.
-                    </p>
-
-                    <button type="submit" class="flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg w-full hover:bg-blue-700 transition shadow-md mt-4">
-                        Contact the seller 
-                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                        </svg>
+                    
+                    <button type="submit" class="w-full flex items-center justify-center submit-button text-white font-semibold py-2 rounded-lg hover:bg-indigo-700 transition shadow-md">
+                        Send Inquiry
                     </button>
                 </form>
             </div>
         </div>
     </dialog>
-    <dialog id="kalosContactModal" class="p-0 backdrop:bg-black/50">
-    <div class="relative w-full h-full bg-white rounded-xl shadow-2xl max-w-sm mx-auto overflow-hidden">
 
-        <button onclick="closeModal('kalosContactModal')" class="absolute top-4 right-4 p-2 text-gray-500 hover:text-gray-900 transition focus:outline-none">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-        </button>
-
-        <div class="pt-12 pb-5 px-6 text-center border-b border-gray-200"> 
-            <svg class="mx-auto w-16 h-16 text-indigo-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-            <h2 class="text-2xl font-bold text-gray-900 mb-2">Developed by kalos_15</h2>
-        </div>
-
-        <div class="p-5">
-            <div class="contact-content p-3">
-                <h2 class="text-2xl font-bold mb-2 text-indigo-700">Get in Touch</h2>
-                <p class="text-gray-700 mb-6">Reach out to me through any of the platforms below:</p>
-                
-                <div class="space-y-4">
-                    <div class="flex items-center space-x-3">
-                        <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                        <p class="text-gray-600">Email:
-                            <a href="mailto:kaloskalos15@gmail.com" class="text-indigo-700 hover:underline font-semibold">kaloskalos15@gmail.com</a>
-                        </p>
-                    </div>
-                    
-                    <div class="flex items-center space-x-3">
-                        <svg class="w-6 h-6 text-indigo-600" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.901 3.25h-3.41c-2.093 0-3.327.91-4.04 1.884-.713.974-.827 2.158-.344 3.018l2.05 3.518-2.05 3.518c-.483.86.13 2.044.843 3.018.713.974 1.947 1.884 4.04 1.884h3.41c2.093 0 3.327-.91 4.04-1.884.713-.974.827-2.158.344-3.018l-2.05-3.518 2.05-3.518c.483-.86-.13-2.044-.843-3.018-.713-.974-1.947-1.884-4.04-1.884zM18.423 20.75c-1.396 0-2.316-.363-2.736-.884-.42-.521-.355-1.127.128-1.987l2.128-3.649-2.128-3.649c-.483-.86-.548-1.466-.128-1.987.42-.521 1.34-.884 2.736-.884h.952c1.396 0 2.316.363 2.736.884.42.521.355 1.127-.128 1.987l-2.128 3.649 2.128 3.649c.483.86.548 1.466.128 1.987-.42.521-1.34.884-2.736.884h-.952zM5.099 3.25c-2.093 0-3.327.91-4.04 1.884-.713.974-.827 2.158-.344 3.018l2.05 3.518-2.05 3.518c-.483.86.13 2.044.843 3.018.713.974 1.947 1.884 4.04 1.884h3.41c2.093 0 3.327-.91 4.04-1.884.713-.974.827-2.158.344-3.018l-2.05-3.518 2.05-3.518c.483-.86-.13-2.044-.843-3.018-.713-.974-1.947-1.884-4.04-1.884h-3.41zM5.577 20.75c-1.396 0-2.316-.363-2.736-.884-.42-.521-.355-1.127.128-1.987l2.128-3.649-2.128-3.649c-.483-.86-.548-1.466-.128-1.987.42-.521 1.34-.884 2.736-.884h.952c1.396 0 2.316.363 2.736.884.42.521.355 1.127-.128 1.987l-2.128 3.649 2.128 3.649c.483.86.548 1.466.128 1.987-.42.521-1.34.884-2.736.884h-.952z"/></svg>
-                        <p class="text-gray-600">X (Twitter):
-                            <a href="https://x.com/kalos_15/" target="_blank" class="text-indigo-700 hover:underline font-semibold">@kalos_15</a>
-                        </p>
-                    </div>
-                    
-                    <div class="flex items-center space-x-3">
-                        <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                        <p class="text-gray-600">Instagram:
-                            <a href="https://www.instagram.com/_kalos.x" target="_blank" class="text-indigo-700 hover:underline font-semibold">@_kalos.x</a>
-                        </p>
-                    </div>
-                </div>
+    <dialog id="successModal" class="p-0 backdrop:bg-black/50">
+        <div class="relative w-full h-full bg-white rounded-xl shadow-2xl max-w-sm mx-auto overflow-hidden">
+            <div class="p-6 text-center">
+                <svg class="mx-auto w-16 h-16 text-green-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Success!</h2>
+                <p class="text-gray-600 mb-6">Your message has been sent. The seller will be in touch soon.</p>
+                <button onclick="closeModal('successModal')" class="flex items-center justify-center px-6 py-3 bg-green-600 text-white font-semibold rounded-lg w-full hover:bg-green-700 transition shadow-md">
+                    Close
+                </button>
             </div>
         </div>
-    </div>
-</dialog>
-    <dialog id="privacyPolicyModal" class="p-0 backdrop:bg-black/50">
-        <div class="relative w-full h-full bg-white rounded-xl shadow-2xl max-w-lg mx-auto overflow-y-auto max-h-[90vh]">
-            <div class="p-8">
-                <button onclick="closeModal('privacyPolicyModal')" class="flex items-center text-blue-600 hover:text-blue-800 transition mb-6">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                    Back
-                </button>
+    </dialog>
 
-                <h2 class="text-3xl font-bold text-gray-900 mb-3">Privacy Policy</h2>
+    <dialog id="errorModal" class="p-0 backdrop:bg-black/50">
+        <div class="relative w-full h-full bg-white rounded-xl shadow-2xl max-w-sm mx-auto overflow-hidden">
+            <div class="p-6 text-center">
+                <svg class="mx-auto w-16 h-16 text-red-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Error!</h2>
+                <p id="submissionErrorText" class="text-gray-600 mb-6">Something went wrong. Please try again later.</p>
+                <button onclick="closeModal('errorModal')" class="flex items-center justify-center px-6 py-3 bg-red-600 text-white font-semibold rounded-lg w-full hover:bg-red-700 transition shadow-md">
+                    Close
+                </button>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog id="privacyPolicyModal" class="p-0 backdrop:bg-black/50">
+        <div class="relative w-full h-full bg-white rounded-xl shadow-2xl max-w-lg mx-auto overflow-hidden">
+            <div class="p-8">
+               <h2 class="text-3xl font-bold text-gray-900 mb-3">Privacy Policy</h2>
 <div class="text-gray-700 space-y-3 text-sm">
 <p>This Privacy Policy describes how <strong><a href="https://www.instagram.com/_kalos.x" target="_blank">kalos</a></strong> ("I", "we", or "us") collects, uses, and discloses your personal information when you visit or make an inquiry through the domain landing page at <span id="privacyDomainText1">.</span>. For the purpose of this policy, the data controller is the domain owner, <strong><a href="https://x.com/kalos_15" target="_blank">kalos_15</a></strong>.</p>
     <h3 class="text-xl font-semibold text-gray-900 mt-3 mb-1">1. Information We Collect</h3>
@@ -420,22 +525,53 @@
     <p class="mt-4 text-xs text-center text-gray-500">Last updated: October 22, 2025</p>
 </div>
             </div>
-        </div>
-    </dialog>
-
-    <dialog id="successModal" class="p-0 backdrop:bg-black/50">
-        <div class="relative w-full h-full bg-white rounded-xl shadow-2xl max-w-sm mx-auto overflow-hidden">
-            <div class="p-6 text-center">
-                <svg class="mx-auto w-16 h-16 text-green-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <h2 class="text-2xl font-bold text-gray-900 mb-2">Success!</h2>
-                <p class="text-gray-600 mb-6">The form has been successfully sent.</p>
-
-                <button onclick="closeModal('successModal')" class="flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg w-full hover:bg-blue-700 transition shadow-md">
-                    Return to the original site 
-                </button>
             </div>
         </div>
     </dialog>
+
+    <dialog id="kalosContactModal" class="p-0 backdrop:bg-black/50">
+    <div class="relative w-full h-full bg-white rounded-xl shadow-2xl max-w-sm mx-auto overflow-hidden">
+
+        <button onclick="closeModal('kalosContactModal')" class="absolute top-4 right-4 p-2 text-gray-500 hover:text-gray-900 transition focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+
+        <div class="pt-12 pb-5 px-6 text-center border-b border-gray-200"> 
+            <svg class="mx-auto w-16 h-16 text-indigo-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+            <h2 class="text-2xl font-bold text-gray-900 mb-2">Developed by kalos_15</h2>
+        </div>
+
+        <div class="p-5">
+            <div class="contact-content p-3">
+                <h2 class="text-2xl font-bold mb-2 text-indigo-700">Get in Touch</h2>
+                <p class="text-gray-700 mb-6">Reach out to me through any of the platforms below:</p>
+                
+                <div class="space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        <p class="text-gray-600">Email:
+                            <a href="mailto:kaloskalos15@gmail.com" class="text-indigo-700 hover:underline font-semibold">kaloskalos15@gmail.com</a>
+                        </p>
+                    </div>
+                    
+                    <div class="flex items-center space-x-3">
+                        <svg class="w-6 h-6 text-indigo-600" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.901 3.25h-3.41c-2.093 0-3.327.91-4.04 1.884-.713.974-.827 2.158-.344 3.018l2.05 3.518-2.05 3.518c-.483.86.13 2.044.843 3.018.713.974 1.947 1.884 4.04 1.884h3.41c2.093 0 3.327-.91 4.04-1.884.713-.974.827-2.158.344-3.018l-2.05-3.518 2.05-3.518c.483-.86-.13-2.044-.843-3.018-.713-.974-1.947-1.884-4.04-1.884zM18.423 20.75c-1.396 0-2.316-.363-2.736-.884-.42-.521-.355-1.127.128-1.987l2.128-3.649-2.128-3.649c-.483-.86-.548-1.466-.128-1.987.42-.521 1.34-.884 2.736-.884h.952c1.396 0 2.316.363 2.736.884.42.521.355 1.127-.128 1.987l-2.128 3.649 2.128 3.649c.483.86.548 1.466.128 1.987-.42.521-1.34.884-2.736.884h-.952zM5.099 3.25c-2.093 0-3.327.91-4.04 1.884-.713.974-.827 2.158-.344 3.018l2.05 3.518-2.05 3.518c-.483.86.13 2.044.843 3.018.713.974 1.947 1.884 4.04 1.884h3.41c2.093 0 3.327-.91 4.04-1.884.713-.974.827-2.158.344-3.018l-2.05-3.518 2.05-3.518c.483-.86-.13-2.044-.843-3.018-.713-.974-1.947-1.884-4.04-1.884h-3.41zM5.577 20.75c-1.396 0-2.316-.363-2.736-.884-.42-.521-.355-1.127.128-1.987l2.128-3.649-2.128-3.649c-.483-.86-.548-1.466-.128-1.987.42-.521 1.34-.884 2.736-.884h.952c1.396 0 2.316.363 2.736.884.42.521.355 1.127-.128 1.987l-2.128 3.649 2.128 3.649c.483.86.548 1.466.128 1.987-.42.521-1.34.884-2.736.884h-.952z"/></svg>
+                        <p class="text-gray-600">X (Twitter):
+                            <a href="https://x.com/kalos_15/" target="_blank" class="text-indigo-700 hover:underline font-semibold">@kalos_15</a>
+                        </p>
+                    </div>
+                    
+                    <div class="flex items-center space-x-3">
+                        <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                        <p class="text-gray-600">Instagram:
+                            <a href="https://www.instagram.com/_kalos.x" target="_blank" class="text-indigo-700 hover:underline font-semibold">@_kalos.x</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</dialog>
     <dialog id="errorModal" class="p-0 backdrop:bg-black/50">
         <div class="relative w-full h-full bg-white rounded-xl shadow-2xl max-w-sm mx-auto overflow-hidden">
             <div class="p-6 text-center">
@@ -443,14 +579,10 @@
                 <h2 class="text-2xl font-bold text-gray-900 mb-2">Error!</h2>
                 <p id="submissionErrorText" class="text-gray-600 mb-6">Something went wrong. Please try again later.</p>
                 <button onclick="closeModal('errorModal')" class="flex items-center justify-center px-6 py-3 bg-red-600 text-white font-semibold rounded-lg w-full hover:bg-red-700 transition shadow-md">
-                    Close 
+                    Close
                 </button>
             </div>
         </div>
     </dialog>
-    <dialog id="domainModal" class="p-0"></dialog>
-    <dialog id="faqModal" class="p-0"></dialog>
-    <dialog id="contactModal" class="p-0"></dialog>
-    <dialog id="blogModal" class="p-0"></dialog>
-    </body>
+</body>
 </html>
