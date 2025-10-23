@@ -189,8 +189,21 @@
                 modal.onclick = null;
             }
         }
-        // ------------------------------------------------
 
+		// 1. Define the redirect function globally
+        function redirectToSpaceship(event) {
+            const domainName = event.currentTarget.getAttribute("data-domain");
+            if (domainName) {
+                const redirectUrl = `https://www.spaceship.com/domain-search/?query=${domainName.toLowerCase()}&beast=false&tab=domains`;
+                window.open(redirectUrl, "_blank");
+                // Assuming closeModal is defined in script.js or elsewhere
+                if (typeof closeModal === 'function') {
+                    closeModal("domainModal"); 
+                }
+            }
+        }
+        // ------------------------------------------------
+     
         document.addEventListener('DOMContentLoaded', () => {
             
             // FIX: Inject the domain name into the H1 element
