@@ -356,6 +356,24 @@
         });
         
     </script>
+	 <style>
+        dialog {
+            border: none;
+            padding: 0;
+            border-radius: 0.75rem;
+            max-width: 90%;
+            margin: auto;
+            z-index: 50;
+        }
+        dialog::backdrop {
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+        }
+        /* Ensure the body font is used */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
 </head>
 <body class="flex flex-col min-h-screen bg-gray-100" style="font-family: 'Inter', sans-serif;">
     <nav class="hidden"></nav>
